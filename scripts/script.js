@@ -13,6 +13,26 @@ document.addEventListener('DOMContentLoaded', () => {
         let newPost = document.createElement('journal-entry');
         newPost.entry = entry;
         document.querySelector('main').appendChild(newPost);
+
       });
+
+      const header = document.querySelector("header");
+      const settingsbutton = header.querySelector("img");
+      settingsbutton.addEventListener('click', () => {
+        router.setState("settings");
+      });
+
+      const homebutton = header.querySelector("h1");
+      homebutton.addEventListener("click", () => {
+        router.setState("home");
+      });
+      
+      const main = document.querySelector('main');
+      const singleentrybutton = main.querySelectorAll("journal-entry");
+      singleentrybutton.forEach( element => 
+          element.addEventListener('click', () => {
+            router.setState(element);
+          })
+      );
     });
 });
