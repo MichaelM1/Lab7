@@ -7,11 +7,7 @@
 
 var CACHE_NAME = 'my-site-cache-v1';
 var urlsToCache = [
-  'https://cse110lab6.herokuapp.com/entries',
-  '/',
-  '/style.css',
-  '/scripts/script.js',
-  '/scripts/router.js'
+  'https://cse110lab6.herokuapp.com/entries'
 ];
 
 self.addEventListener('install', function(event) {
