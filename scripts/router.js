@@ -1,11 +1,9 @@
 // router.js
-
 export const router = {};
-
 /**
  * Changes the "page" (state) that your SPA app is currently set to
  */
-router.setState = function() {
+router.setState = function(param) {
   /**
    * - There are three states that your SPA app will have
    *    1. The home page
@@ -35,4 +33,69 @@ router.setState = function() {
    *    1. You may add as many helper functions in this file as you like
    *    2. You may modify the parameters of setState() as much as you like
    */
+  const body = document.querySelector('body');
+  const header = body.querySelector('header');
+  if(param == "settings"){
+    if(body.className == "settings") return;
+    removeEntry();
+    body.className = "settings";
+    header.querySelector('h1').innerHTML = "Settings";
+    history.pushState(null, null, "#settings");
+  }
+  else if(param == "home"){
+    if(body.className == "") return;
+    removeEntry();
+    body.className = "";
+    header.querySelector('h1').innerHTML = "Journal Entries";
+    history.pushState(null, null, window.location.pathname + window.location.search);
+  }
+  else if(body.contains(param)){
+    if(body.className == "entry-page") return;
+    removeEntry();
+    let newEntryPage = document.createElement("entry-page");
+    body.appendChild(newEntryPage);
+    const entrypage = body.querySelector('entry-page');
+    entrypage.entry = param.entry;
+    body.className = "single-entry";
+    let temp = document.querySelectorAll('journal-entry');
+    let arr = Array.from(temp);
+    let i = arr.indexOf(param);
+    header.querySelector('h1').innerHTML = "Entry " + (1 + i);
+    history.pushState(entrypage.entry, null, "#entry" + (1+i));
+  }
+  window.addEventListener('popstate', (event)=> {
+    if(location.hash == "") {
+      removeEntry();
+      body.className = "";
+      header.querySelector('h1').innerHTML = "Journal Entries";
+    }
+    else if(location.hash == "#settings") {
+      removeEntry();
+      body.className = "settings";
+      header.querySelector('h1').innerHTML = "Settings";
+      body.className = "settings";
+    }
+    else {
+      removeEntry();
+      let newEntryPage = document.createElement("entry-page");
+      body.appendChild(newEntryPage);
+      const entrypage = body.querySelector('entry-page');
+      entrypage.entry = event.state;
+      body.className = "single-entry";
+      let temp = document.querySelectorAll('journal-entry');
+      let arr = Array.from(temp);
+      let val = 0;
+      for(let i = 0; i < arr.length; i++) {
+        if(event.state.title == arr[i].entry.title) {
+          val = i;
+        }
+      }
+      header.querySelector('h1').innerHTML = "Entry " + (1 + val);
+    }
+  });  
+}
+function removeEntry(){
+  if(document.querySelector("entry-page") == null) return;
+  var deleteEntry = document.querySelector("entry-page");
+  deleteEntry.parentNode.removeChild(deleteEntry);
 }
